@@ -1,7 +1,7 @@
 # Elevator.js Extension for Quarto
 
 This extension provides support and shortcode to [Elevator.js](https://github.com/tholman/elevator.js).  
-Animations are only available for HTML-based documents.
+Animation is only available for HTML-based documents.
 
 ## Installing
 
