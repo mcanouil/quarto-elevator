@@ -60,9 +60,9 @@ I call "back to top" buttons elevators...
 <div class="down-arrow">&#9660;</div>
 Ok, here we are... click that elevator!
 
-{{< elevator audio=_extensions/elevator/BossaBossa.mp3 >}}
+{{< elevator audio=BossaBossa.mp3 >}}
 
-Or `{{{< elevator "Return to 'Wow, all this scrolling.'" wow-all-this-scrolling audio=_extensions/elevator/BossaBossa.mp3 >}}}` to scroll up to `## Wow, all this scrolling`.
+Or `{{{< elevator "Return to 'Wow, all this scrolling.'" wow-all-this-scrolling audio=BossaBossa.mp3 >}}}` to scroll up to `## Wow, all this scrolling`.
 
 :::
 
