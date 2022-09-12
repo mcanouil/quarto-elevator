@@ -1,0 +1,73 @@
+---
+title: Elevator.js Quarto Extension
+format: html
+---
+
+This extension allows you to use [Elevator.js](https://github.com/tholman/elevator.js) in your Quarto HTML documents.
+It provides an `{{{< elevator >}}}` shortcode:
+
+- Mandatory:
+  ``` markdown
+  {{{< elevator >}}}
+  ```
+
+- Optional `<text-button>`, `<anchor-target>`, and `<audio=audio.mp3>`:
+  ``` markdown
+  {{{< elevator <text-button> <anchor-target> <audio=audio.mp3> >}}}
+  ```
+
+:::{style='text-align: center;'}
+
+```{=html}
+<style>
+.down-arrow {
+  font-size: 120px;
+  margin-top: 120px;
+  margin-bottom: 120px;
+  text-shadow: 0px -20px #0C1F31, 0px 0px #C33329;
+  color: rgba(0,0,0,0);
+  -webkit-transform: scaleY(0.8);
+  -moz-transform: scaleY(0.8);
+  transform: scaleY(0.8);
+}
+</style>
+```
+
+Elevator.js fixes those awkward "scroll to top" moments the old fashioned way.
+
+<div class="down-arrow">&#9660;</div>
+First we need to get to the bottom of the page.
+<div class="down-arrow">&#9660;</div>
+Because you're already at the top.
+<div class="down-arrow">&#9660;</div>
+So a "back to top" button wouldn't make sense.
+<div class="down-arrow">&#9660;</div>
+Down down down.
+<div class="down-arrow">&#9660;</div>
+## Wow, all this scrolling
+<div class="down-arrow">&#9660;</div>
+This had better be worth it.
+<div class="down-arrow">&#9660;</div>
+It's going to take ages to get back to the top.
+<div class="down-arrow">&#9660;</div>
+If only we had an easy way to get back...
+<div class="down-arrow">&#9660;</div>
+...that is both functional and fun.
+<div class="down-arrow">&#9660;</div>
+I call "back to top" buttons elevators...
+<div class="down-arrow">&#9660;</div>
+...they should really behave more like them.
+<div class="down-arrow">&#9660;</div>
+Ok, here we are... click that elevator!
+
+{{< elevator audio=_extensions/elevator/BossaBossa.mp3 >}}
+
+Or `{{{< elevator "Return to 'Wow, all this scrolling.'" wow-all-this-scrolling audio=_extensions/elevator/BossaBossa.mp3 >}}}` to scroll up to `## Wow, all this scrolling`.
+
+:::
+
+---
+
+BossaBossa by Kevin MacLeod | <https://incompetech.com/>.  
+Music promoted by <https://www.chosic.com/free-music/all/>.
+Creative Commons Creative Commons: By Attribution 3.0 License (<http://creativecommons.org/licenses/by/3.0/>).
