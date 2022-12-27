@@ -1,19 +1,19 @@
-local function ensureHtmlDeps()
-  quarto.doc.addHtmlDependency({
+local function ensure_html_deps()
+  quarto.doc.add_html_dependency({
     name = 'elevatorjs',
     version = '1.0.0',
     scripts = {"elevator.min.js"}
   })
 end
 
-local function isEmpty(s)
+local function is_empty(s)
   return s == '' or s == nil
 end
 
 return {
   ["elevator"] = function(args, kwargs)
-    if quarto.doc.isFormat("html:js") then
-      ensureHtmlDeps()
+    if quarto.doc.is_format("html:js") then
+      ensure_html_deps()
 
       local textButton = 'Return to the top!'
       local targetAnchor = ''
@@ -25,14 +25,14 @@ return {
       end
 
       mainAudio = pandoc.utils.stringify(kwargs["audio"])
-      if isEmpty(mainAudio) then
+      if is_empty(mainAudio) then
         mainAudio = ''
       end
 
       endAudio = pandoc.utils.stringify(kwargs["end"])
-      if isEmpty(endAudio) then
+      if is_empty(endAudio) then
         endAudio = "ding.mp3"
-        quarto.doc.addFormatResource(endAudio)
+        quarto.doc.add_format_resource(endAudio)
       end
 
       return pandoc.RawInline(
