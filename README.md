@@ -37,3 +37,5 @@ This is the output of `example.qmd` for [HTML](https://m.canouil.fr/quarto-eleva
 [BossaBossa](_extensions/elevator/BossaBossa.mp3) by Kevin MacLeod | <https://incompetech.com/>.  
 Music promoted by <https://www.chosic.com/free-music/all/>.
 Creative Commons Creative Commons: By Attribution 3.0 License (<http://creativecommons.org/licenses/by/3.0/>).
+
+[Elevator.js](https://github.com/tholman/elevator.js) by Tim Holman under MIT License.
