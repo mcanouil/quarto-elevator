@@ -30,7 +30,7 @@ To add an elevator button, use the `{{< elevator >}}` shortcode. For example:
 
 Here is the source code for a minimal example: [example.qmd](example.qmd).
 
-This is the output of `example.qmd` for [HTML](https://m.canouil.fr/quarto-elevator/).
+This is the output of `example.qmd` for [HTML](https://m.canouil.dev/quarto-elevator/).
 
 ---
 
