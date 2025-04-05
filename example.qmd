@@ -1,6 +1,8 @@
 ---
 title: Elevator.js Quarto Extension
-format: html
+format:
+  html:
+    output-file: index
 ---
 
 This extension allows you to use [Elevator.js](https://github.com/tholman/elevator.js) in your Quarto HTML documents.
