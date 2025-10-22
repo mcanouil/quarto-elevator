@@ -22,6 +22,10 @@
 # SOFTWARE.
 ]]
 
+--- Load utils module
+local utils_path = quarto.utils.resolve_path("utils.lua")
+local utils = require(utils_path)
+
 local function ensure_html_deps()
   quarto.doc.add_html_dependency({
     name = 'elevatorjs',
@@ -30,9 +34,6 @@ local function ensure_html_deps()
   })
 end
 
-local function is_empty(s)
-  return s == '' or s == nil
-end
 
 return {
   ["elevator"] = function(args, kwargs)
@@ -42,19 +43,19 @@ return {
       local textButton = 'Return to the top!'
       local targetAnchor = ''
       if #args > 0 then
-        textButton = pandoc.utils.stringify(args[1])
+        textButton = utils.stringify(args[1])
         if #args > 1 then
-          targetAnchor = 'targetElement: document.querySelector("#' .. pandoc.utils.stringify(args[2]) .. '"), '
+          targetAnchor = 'targetElement: document.querySelector("#' .. utils.stringify(args[2]) .. '"), '
         end
       end
 
-      mainAudio = pandoc.utils.stringify(kwargs["audio"])
-      if is_empty(mainAudio) then
+      mainAudio = utils.stringify(kwargs["audio"])
+      if utils.is_empty(mainAudio) then
         mainAudio = ''
       end
 
-      endAudio = pandoc.utils.stringify(kwargs["end"])
-      if is_empty(endAudio) then
+      endAudio = utils.stringify(kwargs["end"])
+      if utils.is_empty(endAudio) then
         endAudio = "ding.mp3"
         quarto.doc.add_format_resource(endAudio)
       end
