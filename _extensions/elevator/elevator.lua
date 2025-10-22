@@ -26,6 +26,10 @@
 local utils_path = quarto.utils.resolve_path("_modules/utils.lua")
 local utils = require(utils_path)
 
+--- Ensure HTML dependencies for Elevator.js are included.
+--- Adds the Elevator.js library for smooth scroll-to-top animations.
+---
+--- @return nil
 local function ensure_html_deps()
   quarto.doc.add_html_dependency({
     name = 'elevatorjs',
@@ -34,13 +38,22 @@ local function ensure_html_deps()
   })
 end
 
-
-return {
-  ["elevator"] = function(args, kwargs)
+--- Elevator shortcode handler.
+--- Creates a button that scrolls smoothly to the top of the page (or a target element)
+--- with optional elevator music sound effects.
+---
+--- @param args table Array of positional arguments (button text, optional target element ID)
+--- @param kwargs table Named arguments (audio: main audio file, end: end audio file)
+--- @return pandoc.RawInline|pandoc.Null HTML button with elevator functionality or Null for non-HTML formats
+--- @usage {{< elevator "Back to top" >}}
+--- @usage {{< elevator "Go up" "header" audio="music.mp3" end="ding.mp3" >}}
+local function elevator(args, kwargs)
     if quarto.doc.is_format("html:js") then
       ensure_html_deps()
 
+      --- @type string Text to display on the button
       local textButton = 'Return to the top!'
+      --- @type string JavaScript code for target element (if specified)
       local targetAnchor = ''
       if #args > 0 then
         textButton = utils.stringify(args[1])
@@ -49,12 +62,14 @@ return {
         end
       end
 
-      mainAudio = utils.stringify(kwargs["audio"])
+      --- @type string Path to main audio file (played during scroll)
+      local mainAudio = utils.stringify(kwargs["audio"])
       if utils.is_empty(mainAudio) then
         mainAudio = ''
       end
 
-      endAudio = utils.stringify(kwargs["end"])
+      --- @type string Path to end audio file (played when scroll completes)
+      local endAudio = utils.stringify(kwargs["end"])
       if utils.is_empty(endAudio) then
         endAudio = "ding.mp3"
         quarto.doc.add_format_resource(endAudio)
@@ -78,5 +93,11 @@ return {
     else
       return pandoc.Null()
     end
-  end
+end
+
+--- Module export table.
+--- Defines the shortcode available to Quarto for elevator scroll-to-top functionality.
+--- @type table<string, function>
+return {
+  ["elevator"] = elevator
 }
