@@ -9,10 +9,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,18 +26,6 @@
 local utils_path = quarto.utils.resolve_path("_modules/utils.lua")
 local utils = require(utils_path)
 
---- Ensure HTML dependencies for Elevator.js are included.
---- Adds the Elevator.js library for smooth scroll-to-top animations.
----
---- @return nil
-local function ensure_html_deps()
-  quarto.doc.add_html_dependency({
-    name = 'elevatorjs',
-    version = '1.0.0',
-    scripts = {"elevator.min.js"}
-  })
-end
-
 --- Elevator shortcode handler.
 --- Creates a button that scrolls smoothly to the top of the page (or a target element)
 --- with optional elevator music sound effects.
@@ -48,51 +36,56 @@ end
 --- @usage {{< elevator "Back to top" >}}
 --- @usage {{< elevator "Go up" "header" audio="music.mp3" end="ding.mp3" >}}
 local function elevator(args, kwargs)
-    if quarto.doc.is_format("html:js") then
-      ensure_html_deps()
+  if quarto.doc.is_format("html:js") then
+    -- Use utils module to ensure HTML dependencies
+    utils.ensure_html_dependency({
+      name = 'elevatorjs',
+      version = '1.0.0',
+      scripts = { "elevator.min.js" }
+    })
 
-      --- @type string Text to display on the button
-      local textButton = 'Return to the top!'
-      --- @type string JavaScript code for target element (if specified)
-      local targetAnchor = ''
-      if #args > 0 then
-        textButton = utils.stringify(args[1])
-        if #args > 1 then
-          targetAnchor = 'targetElement: document.querySelector("#' .. utils.stringify(args[2]) .. '"), '
-        end
+    --- @type string Text to display on the button
+    local textButton = 'Return to the top!'
+    --- @type string JavaScript code for target element (if specified)
+    local targetAnchor = ''
+    if #args > 0 then
+      textButton = utils.stringify(args[1])
+      if #args > 1 then
+        targetAnchor = 'targetElement: document.querySelector("#' .. utils.stringify(args[2]) .. '"), '
       end
-
-      --- @type string Path to main audio file (played during scroll)
-      local mainAudio = utils.stringify(kwargs["audio"])
-      if utils.is_empty(mainAudio) then
-        mainAudio = ''
-      end
-
-      --- @type string Path to end audio file (played when scroll completes)
-      local endAudio = utils.stringify(kwargs["end"])
-      if utils.is_empty(endAudio) then
-        endAudio = "ding.mp3"
-        quarto.doc.add_format_resource(endAudio)
-      end
-
-      return pandoc.RawInline(
-        'html',
-        '<script>' ..
-          'window.onload = function() { ' ..
-            'var elevator = new Elevator({ ' ..
-              'element: document.querySelector(".elevator-button")' ..
-              ', ' .. 
-              targetAnchor ..
-              ' mainAudio: "' .. mainAudio .. '",' ..
-              ' endAudio: "' .. endAudio .. '"' ..
-            ' });' ..
-          ' }' ..
-        '</script>' ..
-        '<button class="btn btn-outline-primary elevator-button" type="submit">' .. textButton .. '</button>'
-      )
-    else
-      return pandoc.Null()
     end
+
+    --- @type string Path to main audio file (played during scroll)
+    local mainAudio = utils.stringify(kwargs["audio"])
+    if utils.is_empty(mainAudio) then
+      mainAudio = ''
+    end
+
+    --- @type string Path to end audio file (played when scroll completes)
+    local endAudio = utils.stringify(kwargs["end"])
+    if utils.is_empty(endAudio) then
+      endAudio = "ding.mp3"
+      quarto.doc.add_format_resource(endAudio)
+    end
+
+    return pandoc.RawInline(
+      'html',
+      '<script>' ..
+      'window.onload = function() { ' ..
+      'var elevator = new Elevator({ ' ..
+      'element: document.querySelector(".elevator-button")' ..
+      ', ' ..
+      targetAnchor ..
+      ' mainAudio: "' .. mainAudio .. '",' ..
+      ' endAudio: "' .. endAudio .. '"' ..
+      ' });' ..
+      ' }' ..
+      '</script>' ..
+      '<button class="btn btn-outline-primary elevator-button" type="submit">' .. textButton .. '</button>'
+    )
+  else
+    return pandoc.Null()
+  end
 end
 
 --- Module export table.
