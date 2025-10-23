@@ -23,8 +23,7 @@
 ]]
 
 --- Load utils module
-local utils_path = quarto.utils.resolve_path("_modules/utils.lua")
-local utils = require(utils_path)
+local utils = require(quarto.utils.resolve_path("_modules/utils.lua"):gsub("%.lua$", ""))
 
 --- Elevator shortcode handler.
 --- Creates a button that scrolls smoothly to the top of the page (or a target element)
