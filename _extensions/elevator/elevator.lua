@@ -23,7 +23,7 @@
 ]]
 
 --- Load utils module
-local utils = require(quarto.utils.resolve_path("_modules/utils.lua"):gsub("%.lua$", ""))
+local utils = require(quarto.utils.resolve_path('_modules/utils.lua'):gsub('%.lua$', ''))
 
 --- Elevator shortcode handler.
 --- Creates a button that scrolls smoothly to the top of the page (or a target element)
@@ -35,12 +35,12 @@ local utils = require(quarto.utils.resolve_path("_modules/utils.lua"):gsub("%.lu
 --- @usage {{< elevator "Back to top" >}}
 --- @usage {{< elevator "Go up" "header" audio="music.mp3" end="ding.mp3" >}}
 local function elevator(args, kwargs)
-  if quarto.doc.is_format("html:js") then
+  if quarto.doc.is_format('html:js') then
     -- Use utils module to ensure HTML dependencies
     utils.ensure_html_dependency({
       name = 'elevatorjs',
       version = '1.0.0',
-      scripts = { "elevator.min.js" }
+      scripts = { 'elevator.min.js' }
     })
 
     --- @type string Text to display on the button
@@ -55,15 +55,15 @@ local function elevator(args, kwargs)
     end
 
     --- @type string Path to main audio file (played during scroll)
-    local mainAudio = utils.stringify(kwargs["audio"])
+    local mainAudio = utils.stringify(kwargs['audio'])
     if utils.is_empty(mainAudio) then
       mainAudio = ''
     end
 
     --- @type string Path to end audio file (played when scroll completes)
-    local endAudio = utils.stringify(kwargs["end"])
+    local endAudio = utils.stringify(kwargs['end'])
     if utils.is_empty(endAudio) then
-      endAudio = "ding.mp3"
+      endAudio = 'ding.mp3'
       quarto.doc.add_format_resource(endAudio)
     end
 
@@ -91,5 +91,5 @@ end
 --- Defines the shortcode available to Quarto for elevator scroll-to-top functionality.
 --- @type table<string, function>
 return {
-  ["elevator"] = elevator
+  ['elevator'] = elevator
 }
