@@ -1,28 +1,32 @@
 # Elevator.js Extension for Quarto
 
-This extension provides support and shortcode to [Elevator.js](https://github.com/tholman/elevator.js).  
+This extension provides support and shortcode to [Elevator.js](https://github.com/tholman/elevator.js).
+
 Animation is only available for HTML-based documents.
 
-## Installing
+## Installation
 
 ```sh
 quarto add mcanouil/quarto-elevator
 ```
 
-This will install the extension under the `_extensions` subdirectory.  
+This will install the extension under the `_extensions` subdirectory.
+
 If you're using version control, you will want to check in this directory.
 
-## Using
+## Usage
 
 To add an elevator button, use the `{{< elevator >}}` shortcode. For example:
 
 - Mandatory:
-  ``` markdown
+
+  ```markdown
   {{< elevator >}}
   ```
 
 - Optional `<text-button>`, `<anchor-target>`, and `<audio=audio.mp3>`:
-  ``` markdown
+
+  ```markdown
   {{< elevator <text-button> <anchor-target> <audio=audio.mp3> >}}
   ```
 
@@ -30,7 +34,9 @@ To add an elevator button, use the `{{< elevator >}}` shortcode. For example:
 
 Here is the source code for a minimal example: [example.qmd](example.qmd).
 
-This is the output of `example.qmd` for [HTML](https://m.canouil.dev/quarto-elevator/).
+Output of `example.qmd`:
+
+- [HTML](https://m.canouil.dev/quarto-elevator/)
 
 ---
 

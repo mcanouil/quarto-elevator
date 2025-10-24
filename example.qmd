@@ -5,20 +5,37 @@ format:
     output-file: index
 ---
 
-This extension allows you to use [Elevator.js](https://github.com/tholman/elevator.js) in your Quarto HTML documents.
-It provides an `{{{< elevator >}}}` shortcode:
+This extension provides support and shortcode to [Elevator.js](https://github.com/tholman/elevator.js).
+
+Animation is only available for HTML-based documents.
+
+## Installation
+
+```bash
+quarto add mcanouil/quarto-elevator
+```
+
+This will install the extension under the `_extensions` subdirectory.
+
+If you're using version control, you will want to check in this directory.
+
+## Usage
+
+To add an elevator button, use the `{{{< elevator >}}}` shortcode:
 
 - Mandatory:
-  ``` markdown
+
+  ```markdown
   {{{< elevator >}}}
   ```
 
 - Optional `<text-button>`, `<anchor-target>`, and `<audio=audio.mp3>`:
-  ``` markdown
+
+  ```markdown
   {{{< elevator <text-button> <anchor-target> <audio=audio.mp3> >}}}
   ```
 
-:::{style='text-align: center;'}
+:::: {style='text-align: center;'}
 
 ```{=html}
 <style>
@@ -37,29 +54,29 @@ It provides an `{{{< elevator >}}}` shortcode:
 
 Elevator.js fixes those awkward "scroll to top" moments the old fashioned way.
 
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 First we need to get to the bottom of the page.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 Because you're already at the top.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 So a "back to top" button wouldn't make sense.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 Down down down.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 ## Wow, all this scrolling
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 This had better be worth it.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 It's going to take ages to get back to the top.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 If only we had an easy way to get back...
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 ...that is both functional and fun.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 I call "back to top" buttons elevators...
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 ...they should really behave more like them.
-<div class="down-arrow">&#9660;</div>
+`<div class="down-arrow">&#9660;</div>`{=html}
 Ok, here we are... click that elevator!
 
 {{< elevator audio=BossaBossa.mp3 >}}
