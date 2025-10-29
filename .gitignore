@@ -4,3 +4,5 @@ example.html
 index.html
 /ding.mp3
 /.luarc.json
+/.quarto/
+**/*.quarto_ipynb
