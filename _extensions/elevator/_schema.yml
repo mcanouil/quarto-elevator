@@ -18,7 +18,19 @@ shortcodes:
       audio:
         type: string
         description: "Path to the main audio file played during the scroll animation."
+        completion:
+          type: file
+          extensions:
+            - .mp3
+            - .ogg
+            - .wav
       end:
         type: string
         default: "ding.mp3"
         description: "Path to the audio file played when the scroll completes."
+        completion:
+          type: file
+          extensions:
+            - .mp3
+            - .ogg
+            - .wav
