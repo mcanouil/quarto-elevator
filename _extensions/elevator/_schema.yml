@@ -1,0 +1,36 @@
+# _schema.yml for "elevator" shortcode extension
+# Describes shortcode arguments and attributes for IDE tooling and runtime validation.
+
+# Per-shortcode schemas.
+# Describes positional arguments and named attributes for {{< elevator >}}.
+shortcodes:
+  elevator:
+    description: "Creates a button that scrolls smoothly to the top of the page with elevator music sound effects."
+    arguments:
+      - name: text
+        type: string
+        description: "Text to display on the button. Defaults to 'Return to the top!'."
+        default: "Return to the top!"
+      - name: target
+        type: string
+        description: "Element ID to scroll to instead of the top of the page."
+    attributes:
+      audio:
+        type: string
+        description: "Path to the main audio file played during the scroll animation."
+        completion:
+          type: file
+          extensions:
+            - .mp3
+            - .ogg
+            - .wav
+      end:
+        type: string
+        default: "ding.mp3"
+        description: "Path to the audio file played when the scroll completes."
+        completion:
+          type: file
+          extensions:
+            - .mp3
+            - .ogg
+            - .wav
