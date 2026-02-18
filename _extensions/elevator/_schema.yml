@@ -3,6 +3,9 @@
 
 # Per-shortcode schemas.
 # Describes positional arguments and named attributes for {{< elevator >}}.
+
+$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v1/extension-schema.json
+
 shortcodes:
   elevator:
     description: "Creates a button that scrolls smoothly to the top of the page with elevator music sound effects."
