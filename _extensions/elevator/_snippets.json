@@ -1,0 +1,7 @@
+{
+	"Elevator shortcode": {
+		"prefix": "elevator",
+		"body": "{{< elevator \"${1:Back to top}\" >}}",
+		"description": "Insert an elevator (back to top) shortcode"
+	}
+}
