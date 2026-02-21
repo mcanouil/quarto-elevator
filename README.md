@@ -7,7 +7,7 @@ Animation is only available for HTML-based documents.
 ## Installation
 
 ```sh
-quarto add mcanouil/quarto-elevator@1.2.1
+quarto add mcanouil/quarto-elevator@1.3.0
 ```
 
 This will install the extension under the `_extensions` subdirectory.
