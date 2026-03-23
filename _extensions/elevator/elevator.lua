@@ -3,8 +3,9 @@
 --- @copyright 2026 Mickaël Canouil
 --- @author Mickaël Canouil
 
---- Load utils module
-local utils = require(quarto.utils.resolve_path('_modules/utils.lua'):gsub('%.lua$', ''))
+--- Load modules
+local str = require(quarto.utils.resolve_path('_modules/string.lua'):gsub('%.lua$', ''))
+local html_mod = require(quarto.utils.resolve_path('_modules/html.lua'):gsub('%.lua$', ''))
 
 --- Elevator shortcode handler.
 --- Creates a button that scrolls smoothly to the top of the page (or a target element)
@@ -20,7 +21,7 @@ local utils = require(quarto.utils.resolve_path('_modules/utils.lua'):gsub('%.lu
 local function elevator(args, kwargs)
   if quarto.doc.is_format('html:js') then
     -- Use utils module to ensure HTML dependencies
-    utils.ensure_html_dependency({
+    html_mod.ensure_html_dependency({
       name = 'elevatorjs',
       version = '1.0.0',
       scripts = { 'elevator.min.js' }
@@ -31,21 +32,21 @@ local function elevator(args, kwargs)
     --- @type string JavaScript code for target element (if specified)
     local targetAnchor = ''
     if #args > 0 then
-      textButton = utils.stringify(args[1])
+      textButton = str.stringify(args[1])
       if #args > 1 then
-        targetAnchor = 'targetElement: document.querySelector("#' .. utils.stringify(args[2]) .. '"), '
+        targetAnchor = 'targetElement: document.querySelector("#' .. str.stringify(args[2]) .. '"), '
       end
     end
 
     --- @type string Path to main audio file (played during scroll)
-    local mainAudio = utils.stringify(kwargs['audio'])
-    if utils.is_empty(mainAudio) then
+    local mainAudio = str.stringify(kwargs['audio'])
+    if str.is_empty(mainAudio) then
       mainAudio = ''
     end
 
     --- @type string Path to end audio file (played when scroll completes)
-    local endAudio = utils.stringify(kwargs['end'])
-    if utils.is_empty(endAudio) then
+    local endAudio = str.stringify(kwargs['end'])
+    if str.is_empty(endAudio) then
       endAudio = 'ding.mp3'
       quarto.doc.add_format_resource(endAudio)
     end
