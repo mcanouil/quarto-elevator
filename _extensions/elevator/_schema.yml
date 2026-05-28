@@ -20,7 +20,7 @@ shortcodes:
     attributes:
       audio:
         type: string
-        description: "Path to the main audio file played during the scroll animation."
+        description: "Path to the main audio file played during the scroll animation. The built-in name 'ding' resolves to the bundled ding.mp3."
         completion:
           type: file
           extensions:
@@ -30,10 +30,32 @@ shortcodes:
       end:
         type: string
         default: "ding.mp3"
-        description: "Path to the audio file played when the scroll completes."
+        description: "Path to the audio file played when the scroll completes. The built-in name 'ding' resolves to the bundled ding.mp3."
         completion:
           type: file
           extensions:
             - .mp3
             - .ogg
             - .wav
+      volume:
+        type: number
+        description: "Playback volume in the range [0.0, 1.0]. Values outside the range are clamped and a warning is emitted."
+        minimum: 0.0
+        maximum: 1.0
+      loop-audio:
+        type: boolean
+        default: true
+        description: "Whether the main audio loops while scrolling. Set to false to play the audio only once."
+      shortcut:
+        type: string
+        description: "Optional keyboard key (matched against KeyboardEvent.key) that triggers the elevator from anywhere outside form fields. Examples: 't', 'Escape'."
+
+metadata:
+  elevator:
+    type: ["boolean", "object"]
+    description: "Set to false to disable every {{< elevator >}} shortcode in the document. Accepts an object with an 'enabled' boolean as an alternative."
+    properties:
+      enabled:
+        type: boolean
+        default: true
+        description: "Whether {{< elevator >}} shortcodes render anything. Defaults to true."

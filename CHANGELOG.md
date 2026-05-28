@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+## 1.5.0 (2026-05-28)
+
+### Bug Fixes
+
+- fix: JavaScript-escape anchor IDs and audio paths so values containing `"`, `\`, `<`, or newlines no longer break the generated init script.
+- fix: Warn (once per render) when the bundled default `ding.mp3` cannot be located alongside the extension.
+- fix: HTML-escape the button text so markup in the `text` argument is rendered as plain text rather than dropped or interpreted.
+
+### New Features
+
+- feat: Add `volume` attribute that clamps to the range [0.0, 1.0] and warns on out-of-range or non-numeric input.
+- feat: Add `loop-audio` attribute that genuinely disables looping (works around Elevator.js's `setAttribute('loop', 'false')` no-op).
+- feat: Add built-in named sounds. `audio=ding` and `end=ding` resolve to the bundled `ding.mp3`.
+- feat: Add `shortcut` attribute to trigger the elevator from anywhere outside form fields via a keyboard key.
+- feat: Add document-level disable via `elevator: false` (or `elevator: { enabled: false }`) in YAML metadata.
+
+### Documentation
+
+- docs: Document new attributes (`volume`, `loop-audio`, `shortcut`), built-in sounds, and global disable in `README.md`, `example.qmd`, `_schema.yml`, and `_snippets.json`.
+
+### Refactoring
+
+- refactor: Add `escape_js_string` helper to the shared `_modules/string.lua` module.
+- refactor: Sync `_modules/` doc-style metadata with the canonical module headers and ship `_modules/logging.lua` alongside `string.lua` and `html.lua`.
+
 ## 1.4.0 (2026-03-23)
 
 ### Refactoring
