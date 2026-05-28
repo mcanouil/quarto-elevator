@@ -33,12 +33,6 @@ local default_audio_registered = false
 --- @type boolean
 local missing_default_warned = false
 
---- Module-level cache for the document-level `elevator: false` opt-out.
---- `nil` means "not yet inspected"; `true`/`false` mean the metadata has been
---- read and the result is recorded.
---- @type boolean|nil
-local globally_disabled = nil
-
 --- Parse a value into a boolean.
 --- Accepts native booleans plus the case-insensitive strings `true`, `yes`,
 --- `1`, `on` (truthy) and `false`, `no`, `0`, `off` (falsy).
@@ -98,23 +92,16 @@ local function parse_volume(raw_value)
 end
 
 --- Determine whether the document opts out of the elevator entirely via the
---- top-level `elevator: false` metadata flag. The result is cached per
---- document; pass the `meta` table supplied to the shortcode handler.
+--- top-level `elevator: false` metadata flag.
+--- Accepts both `elevator: false` and `elevator: { enabled: false }`.
 --- @param meta table|nil The document metadata passed by Quarto
 --- @return boolean True when the shortcode should render nothing
 local function is_globally_disabled(meta)
-  if globally_disabled ~= nil then return globally_disabled end
-  if meta and meta.elevator ~= nil then
-    -- Accept both `elevator: false` and `elevator: { enabled: false }`.
-    if type(meta.elevator) == 'table' and meta.elevator.enabled ~= nil then
-      globally_disabled = not parse_boolean(meta.elevator.enabled, true)
-    else
-      globally_disabled = not parse_boolean(meta.elevator, true)
-    end
-  else
-    globally_disabled = false
+  if not (meta and meta.elevator ~= nil) then return false end
+  if type(meta.elevator) == 'table' and meta.elevator.enabled ~= nil then
+    return not parse_boolean(meta.elevator.enabled, true)
   end
-  return globally_disabled
+  return not parse_boolean(meta.elevator, true)
 end
 
 --- Warn (once per render) when the default `ding.mp3` resource cannot be
@@ -141,47 +128,46 @@ local function ensure_default_audio()
 end
 
 --- Build the JavaScript snippet wiring one DOM selector to an Elevator
---- instance. All option fragments are passed pre-serialised so the caller
---- controls escaping; this helper only stitches the pieces together. Each
---- block is wrapped in its own IIFE so the local `instance` variable does
+--- instance.
+--- All option fragments are passed pre-serialised so the caller controls
+--- escaping; this helper only stitches the pieces together.
+--- Each block is wrapped in its own IIFE so the local `instance` variable does
 --- not collide with sibling blocks (`var` is function-scoped in JS).
---- @param selector_js string JavaScript expression returning the element
---- @param target_js string `targetElement: ...,` snippet (may be empty)
---- @param main_audio_js string `mainAudio: "...",` snippet (may be empty)
---- @param end_audio_js string `endAudio: "...",` snippet (may be empty)
---- @param loop_audio_js string `loopAudio: true|false,` snippet (may be empty)
---- @param volume_pre_js string `window.Audio` wrap installed before construction
---- @param volume_post_js string `window.Audio` restore installed after construction
---- @param shortcut_js string Keyboard-shortcut wiring (may be empty)
---- @param missing_label string Human-readable label used in `not found` logs
---- @return string A JavaScript block ready to embed inside a `<script>` tag
-local function build_wiring(
-  selector_js,
-  target_js,
-  main_audio_js,
-  end_audio_js,
-  loop_audio_js,
-  volume_pre_js,
-  volume_post_js,
-  shortcut_js,
-  missing_label
-)
+--- @param config table Fields:
+---   selector_js (string): JavaScript expression returning the element.
+---   target_js (string): `targetElement: ...,` snippet (may be empty).
+---   main_audio_js (string): `mainAudio: "...",` snippet (may be empty).
+---   end_audio_js (string): `endAudio: "...",` snippet (may be empty).
+---   loop_audio_js (string): `loopAudio: true|false,` snippet (may be empty).
+---   volume_pre_js (string): `window.Audio` wrap installed before construction.
+---   volume_post_js (string): `window.Audio` restore installed after construction.
+---   shortcut_js (string): Keyboard-shortcut wiring (may be empty).
+---   pre_init_js (string|nil): Extra JS run after the element is found, before construction.
+---   missing_label (string|nil): Label for the `not found` console log; when nil, the else branch is omitted.
+--- @return string A JavaScript block ready to embed inside a `<script>` tag.
+local function build_wiring(config)
+  local else_branch = ''
+  if config.missing_label then
+    else_branch =
+      '  } else {' ..
+      '    console.log("Elevator: ' .. config.missing_label .. ' not found");'
+  end
   return
     '(function () {' ..
-    '  var el = ' .. selector_js .. ';' ..
+    '  var el = ' .. config.selector_js .. ';' ..
     '  if (el) {' ..
-    volume_pre_js ..
+    (config.pre_init_js or '') ..
+    config.volume_pre_js ..
     '    var instance = new Elevator({' ..
     '      element: el,' ..
-    target_js ..
-    main_audio_js ..
-    end_audio_js ..
-    loop_audio_js ..
+    config.target_js ..
+    config.main_audio_js ..
+    config.end_audio_js ..
+    config.loop_audio_js ..
     '    });' ..
-    volume_post_js ..
-    shortcut_js ..
-    '  } else {' ..
-    '    console.log("Elevator: ' .. missing_label .. ' not found");' ..
+    config.volume_post_js ..
+    config.shortcut_js ..
+    else_branch ..
     '  }' ..
     '})();'
 end
@@ -274,10 +260,9 @@ local function elevator(args, kwargs, meta)
   -- needed, then restore the original constructor straight after `new
   -- Elevator`. The saved-original handle lives on `window` so the
   -- custom-button and back-to-top blocks can share one restore step.
-  local needs_audio_wrap = volume ~= nil or loop_audio == false
   local volume_pre_js = ''
   local volume_post_js = ''
-  if needs_audio_wrap then
+  if volume ~= nil or loop_audio == false then
     local body = '      var a = new window.__elevatorOrigAudio(src);'
     if volume ~= nil then
       body = body .. '      a.volume = ' .. tostring(volume) .. ';'
@@ -315,36 +300,25 @@ local function elevator(args, kwargs, meta)
       '    });'
   end
 
-  local custom_wiring = build_wiring(
-    'document.querySelector(".elevator-button")',
-    target_anchor_js,
-    main_audio_js,
-    end_audio_js,
-    loop_audio_js,
-    volume_pre_js,
-    volume_post_js,
-    shortcut_js,
-    'Custom button'
-  )
+  local shared_options = {
+    target_js = target_anchor_js,
+    main_audio_js = main_audio_js,
+    end_audio_js = end_audio_js,
+    loop_audio_js = loop_audio_js,
+    volume_pre_js = volume_pre_js,
+    volume_post_js = volume_post_js,
+    shortcut_js = shortcut_js,
+  }
 
-  local quarto_wiring =
-    '(function () {' ..
-    '  var qbtt = document.querySelector("#quarto-back-to-top");' ..
-    '  if (qbtt) {' ..
-    '    qbtt.removeAttribute("onclick");' ..
-    '    qbtt.onclick = null;' ..
-    volume_pre_js ..
-    '    var instance = new Elevator({' ..
-    '      element: qbtt,' ..
-    target_anchor_js ..
-    main_audio_js ..
-    end_audio_js ..
-    loop_audio_js ..
-    '    });' ..
-    volume_post_js ..
-    shortcut_js ..
-    '  }' ..
-    '})();'
+  local custom_wiring = build_wiring(setmetatable({
+    selector_js = 'document.querySelector(".elevator-button")',
+    missing_label = 'Custom button',
+  }, { __index = shared_options }))
+
+  local quarto_wiring = build_wiring(setmetatable({
+    selector_js = 'document.querySelector("#quarto-back-to-top")',
+    pre_init_js = '    el.removeAttribute("onclick");    el.onclick = null;',
+  }, { __index = shared_options }))
 
   local init_script =
     'window.addEventListener("load", function() {' ..
