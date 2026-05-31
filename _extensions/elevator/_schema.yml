@@ -1,10 +1,11 @@
-# _schema.yml for "elevator" shortcode extension
-# Describes shortcode arguments and attributes for IDE tooling and runtime validation.
+# Schema for the elevator extension
+$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v2/extension-schema.json
 
-# Per-shortcode schemas.
-# Describes positional arguments and named attributes for {{< elevator >}}.
-
-$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v1/extension-schema.json
+options:
+  enabled:
+    type: boolean
+    default: true
+    description: "Whether {{< elevator >}} shortcodes render anything; set to false to disable every shortcode in the document."
 
 shortcodes:
   elevator:
@@ -12,15 +13,15 @@ shortcodes:
     arguments:
       - name: text
         type: string
-        description: "Text to display on the button. Defaults to 'Return to the top!'."
         default: "Return to the top!"
+        description: "Text to display on the button."
       - name: target
         type: string
         description: "Element ID to scroll to instead of the top of the page."
     attributes:
       audio:
         type: string
-        description: "Path to the main audio file played during the scroll animation."
+        description: "Path to the main audio file played during the scroll animation; the built-in name 'ding' resolves to the bundled ding.mp3."
         completion:
           type: file
           extensions:
@@ -30,10 +31,22 @@ shortcodes:
       end:
         type: string
         default: "ding.mp3"
-        description: "Path to the audio file played when the scroll completes."
+        description: "Path to the audio file played when the scroll completes; the built-in name 'ding' resolves to the bundled ding.mp3."
         completion:
           type: file
           extensions:
             - .mp3
             - .ogg
             - .wav
+      volume:
+        type: number
+        minimum: 0.0
+        maximum: 1.0
+        description: "Playback volume in the range [0.0, 1.0]; values outside the range are clamped and a warning is emitted."
+      loop-audio:
+        type: boolean
+        default: true
+        description: "Whether the main audio loops while scrolling; set to false to play the audio only once."
+      shortcut:
+        type: string
+        description: "Optional keyboard key (matched against KeyboardEvent.key) that triggers the elevator from anywhere outside form fields, e.g. 't' or 'Escape'."

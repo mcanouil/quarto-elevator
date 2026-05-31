@@ -3,5 +3,20 @@
 		"prefix": "elevator",
 		"body": "{{< elevator \"${1:Back to top}\" >}}",
 		"description": "Insert an elevator (back to top) shortcode"
+	},
+	"Elevator shortcode with audio": {
+		"prefix": "elevator-audio",
+		"body": "{{< elevator \"${1:Back to top}\" audio=\"${2:music.mp3}\" >}}",
+		"description": "Insert an elevator shortcode with main audio"
+	},
+	"Elevator shortcode with target": {
+		"prefix": "elevator-target",
+		"body": "{{< elevator \"${1:Go up}\" \"${2:target-id}\" >}}",
+		"description": "Insert an elevator shortcode scrolling to a target id"
+	},
+	"Elevator shortcode with volume and shortcut": {
+		"prefix": "elevator-full",
+		"body": "{{< elevator \"${1:Back to top}\" audio=\"${2:music.mp3}\" volume=${3:0.5} loop-audio=${4:true} shortcut=\"${5:t}\" >}}",
+		"description": "Insert an elevator shortcode with volume, loop, and keyboard shortcut"
 	}
 }

@@ -41,6 +41,28 @@ To add an elevator button, use the `{{{< elevator >}}}` shortcode:
   {{{< elevator <text-button> <anchor-target> <audio=audio.mp3> >}}}
   ```
 
+- Volume, loop, and keyboard shortcut:
+
+  ```markdown
+  {{{< elevator "Back" audio=music.mp3 volume=0.5 loop-audio=false shortcut="t" >}}}
+  ```
+
+- Built-in named sound (`ding` resolves to the bundled `ding.mp3`):
+
+  ```markdown
+  {{{< elevator "Back" end=ding >}}}
+  ```
+
+- Global disable via document metadata:
+
+  ```yaml
+  ---
+  extensions:
+    elevator:
+      enabled: false
+  ---
+  ```
+
 :::: {style='text-align: center;'}
 
 ```{=html}
@@ -85,14 +107,16 @@ I call "back to top" buttons elevators...
 `<div class="down-arrow">&#9660;</div>`{=html}
 Ok, here we are... click that elevator!
 
-{{< elevator audio=BossaBossa.mp3 >}}
+{{< elevator audio=BossaBossa.mp3 volume=0.5 loop-audio=false shortcut="t" >}}
 
 Or `{{{< elevator "Return to 'Wow, all this scrolling.'" wow-all-this-scrolling audio=BossaBossa.mp3 >}}}` to scroll up to `## Wow, all this scrolling`.
+
+Press `t` anywhere outside a form field to ride the elevator.
 
 :::
 
 ---
 
-BossaBossa by Kevin MacLeod | <https://incompetech.com/>.  
+BossaBossa by Kevin MacLeod | <https://incompetech.com/>.
 Music promoted by <https://www.chosic.com/free-music/all/>.
 Creative Commons Creative Commons: By Attribution 3.0 License (<http://creativecommons.org/licenses/by/3.0/>).

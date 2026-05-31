@@ -1,5 +1,5 @@
 --- MC String - String manipulation and escaping for Quarto Lua filters and shortcodes
---- @module string
+--- @module "string"
 --- @license MIT
 --- @copyright 2026 Mickaël Canouil
 --- @author Mickaël Canouil
@@ -110,6 +110,27 @@ end
 --- @return string The escaped text safe for Typst string literals
 function M.escape_typst_string(text)
   return text:gsub('\\', '\\\\'):gsub('"', '\\"')
+end
+
+--- Escape characters for JavaScript string literals (inside `"..."` or `'...'`).
+--- Handles backslash, both quote styles, newlines, carriage returns, tabs,
+--- form feeds, and the `</` sequence so payloads cannot break out of a
+--- surrounding inline `<script>` block.
+--- @param text string|nil The text to escape
+--- @return string The escaped text safe for JavaScript string literals
+--- @usage local safe = M.escape_js_string([[a "b" </script>]])
+function M.escape_js_string(text)
+  if text == nil then return '' end
+  if type(text) ~= 'string' then text = tostring(text) end
+  return text
+      :gsub('\\', '\\\\')
+      :gsub('"', '\\"')
+      :gsub("'", "\\'")
+      :gsub('\n', '\\n')
+      :gsub('\r', '\\r')
+      :gsub('\t', '\\t')
+      :gsub('\f', '\\f')
+      :gsub('</', '<\\/')
 end
 
 --- Escape special Lua pattern characters for use in string.gsub.
