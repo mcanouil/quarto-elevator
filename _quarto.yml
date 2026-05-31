@@ -1,4 +1,5 @@
 project:
   type: default
+  output-dir: _site
   resources:
     - BossaBossa.mp3
