@@ -68,11 +68,13 @@ The built-in name `ding` resolves to the bundled `ding.mp3`, so `audio=ding` or 
 
 ### Global disable
 
-Set `elevator: false` (or `elevator: { enabled: false }`) in the document YAML to suppress every `{{< elevator >}}` shortcode in that document.
+Set `extensions.elevator.enabled: false` in the document YAML to suppress every `{{< elevator >}}` shortcode in that document.
 
 ```yaml
 ---
-elevator: false
+extensions:
+  elevator:
+    enabled: false
 ---
 ```
 

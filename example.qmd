@@ -57,7 +57,9 @@ To add an elevator button, use the `{{{< elevator >}}}` shortcode:
 
   ```yaml
   ---
-  elevator: false
+  extensions:
+    elevator:
+      enabled: false
   ---
   ```
 

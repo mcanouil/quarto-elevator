@@ -92,16 +92,18 @@ local function parse_volume(raw_value)
 end
 
 --- Determine whether the document opts out of the elevator entirely via the
---- top-level `elevator: false` metadata flag.
---- Accepts both `elevator: false` and `elevator: { enabled: false }`.
+--- `extensions.elevator.enabled: false` metadata flag.
 --- @param meta table|nil The document metadata passed by Quarto
 --- @return boolean True when the shortcode should render nothing
 local function is_globally_disabled(meta)
-  if not (meta and meta.elevator ~= nil) then return false end
-  if type(meta.elevator) == 'table' and meta.elevator.enabled ~= nil then
-    return not parse_boolean(meta.elevator.enabled, true)
+  if type(meta) ~= 'table' then return false end
+  local ext = meta.extensions
+  if type(ext) ~= 'table' then return false end
+  local elevator_meta = ext.elevator
+  if type(elevator_meta) ~= 'table' or elevator_meta.enabled == nil then
+    return false
   end
-  return not parse_boolean(meta.elevator, true)
+  return not parse_boolean(elevator_meta.enabled, true)
 end
 
 --- Warn (once per render) when the default `ding.mp3` resource cannot be

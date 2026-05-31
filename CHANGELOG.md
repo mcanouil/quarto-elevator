@@ -14,7 +14,7 @@
 - feat: Add `loop-audio` attribute that genuinely disables looping (works around Elevator.js's `setAttribute('loop', 'false')` no-op).
 - feat: Add built-in named sounds. `audio=ding` and `end=ding` resolve to the bundled `ding.mp3`.
 - feat: Add `shortcut` attribute to trigger the elevator from anywhere outside form fields via a keyboard key.
-- feat: Add document-level disable via `elevator: false` (or `elevator: { enabled: false }`) in YAML metadata.
+- feat: Add document-level disable via `extensions.elevator.enabled: false` in YAML metadata.
 
 ### Documentation
 
