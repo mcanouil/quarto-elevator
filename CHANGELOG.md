@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.5.0 (2026-05-31)
+
 ### Bug Fixes
 
 - fix: JavaScript-escape anchor IDs and audio paths so values containing `"`, `\`, `<`, or newlines no longer break the generated init script.
