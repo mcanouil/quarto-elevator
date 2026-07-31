@@ -1,0 +1,73 @@
+---
+title: "Elevator"
+subtitle: "A back-to-top button that takes its time, with music."
+description: "What the elevator extension is for, how to install it, and the smallest shortcode that produces a working button."
+authors:
+  - name: "Mickaël CANOUIL, _Ph.D._"
+    orcid: "0000-0002-3396-4549"
+    url: "https://mickael.canouil.fr"
+---
+
+A back-to-top link is a solved problem, and a dull one.
+[Elevator.js](https://github.com/tholman/elevator.js) solves it differently: the page rides back up at a leisurely pace while elevator music plays, and dings when it arrives.
+
+`elevator` wires that into Quarto as a shortcode.
+One line gives you the button, the script, and the bundled arrival sound.
+
+## Installation
+
+```bash
+quarto add {{< var extension.reference >}}
+```
+
+This will install the extension under the `_extensions` subdirectory.
+If you are using version control, you will want to check in this directory.
+
+Or install it from your editor with [Quarto Wizard](https://m.canouil.dev/quarto-wizard):
+
+::: {.btn-group role="group" aria-label="Quarto Wizard installer options"}
+
+[Visual Studio Code](vscode://mcanouil.quarto-wizard/install?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Install {{< var extension.reference >}} in Visual Studio Code using the Quarto Wizard extension."}
+[Positron](positron://mcanouil.quarto-wizard/install?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Install {{< var extension.reference >}} in Positron using the Quarto Wizard extension."}
+[VSCodium](vscodium://mcanouil.quarto-wizard/install?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Install {{< var extension.reference >}} in VSCodium using the Quarto Wizard extension."}
+
+:::
+
+## Quick start
+
+```markdown
+{{{< elevator >}}}
+```
+
+That is the whole thing: a button labelled "Return to the top!" that rides the page up and dings on arrival.
+
+Give it your own label, and a target to stop at:
+
+```markdown
+{{{< elevator "Back to the header" my-header >}}}
+```
+
+Add the music, which is the point:
+
+```markdown
+{{{< elevator audio=music.mp3 volume=0.4 >}}}
+```
+
+See the [Reference](reference.qmd) for every option, and the [Examples](examples.qmd) for a button you can ride.
+
+## Where it works
+
+HTML formats that carry JavaScript, which covers `html` and `revealjs`.
+
+::: {.callout-note}
+In every other format the shortcode renders nothing, which is the right outcome: a scroll button means nothing in a PDF.
+:::
+
+## Links
+
+- [Reference](reference.qmd) for the full option list.
+- [Examples](examples.qmd) for a working button.
+- [Changelog](changelog.qmd) for what each release changed.
+- [Source and issues](https://github.com/mcanouil/quarto-elevator) on GitHub.
+
+[Elevator.js](https://github.com/tholman/elevator.js) is by Tim Holman, under the MIT Licence.

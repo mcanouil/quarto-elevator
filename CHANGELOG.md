@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Documentation
+
+- docs: Add a documentation website under `docs/`, built on the `atelier` project type and published to <https://m.canouil.dev/quarto-elevator/>.
+- docs: Trim `README.md` to a landing page pointing at the website, and `example.qmd` to a short starting point to copy.
+- docs: Add the Pages workflow, which renders `docs/` on pull requests and deploys it from the release tag.
+- docs: Add the Quarto Extensions Updates workflow, scanning `docs` for the website's own dependencies.
+- docs: Record that a page carries one working button, since each shortcode wires the first one it finds.
+
 ## 1.5.0 (2026-05-31)
 
 ### Bug Fixes

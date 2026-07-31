@@ -1,0 +1,83 @@
+---
+title: "Examples"
+subtitle: "A button you can ride."
+description: "The elevator button rendered by the extension, with the source for each variation alongside it."
+---
+
+The button below is rendered by the extension as this page is built.
+Scroll down first, then press it.
+
+## The default button
+
+```markdown
+{{{< elevator >}}}
+```
+
+{{< elevator >}}
+
+No label, no target, no audio: the button reads "Return to the top!", rides to the top of the page, and dings on arrival with the sound bundled with the extension.
+
+::: {.callout-note}
+This page carries one button, deliberately.
+A second shortcode here would be wired to the first button rather than to itself, as the [Reference](reference.qmd#limitations) explains.
+:::
+
+## Giving it a label and a target
+
+The first argument is the label, the second the `id` of the element to stop at.
+
+```markdown
+{{{< elevator "Back to the header" my-header >}}}
+```
+
+A target is written without its leading `#`, and needs a label in front of it, since the second argument is only read when the first is present.
+
+## Adding music
+
+`audio` plays for the length of the ride, and `end` replaces the arrival sound.
+
+```markdown
+{{{< elevator "Going up" audio=music.mp3 end=ding >}}}
+```
+
+The name `ding` is built in: it resolves to the sound shipped with the extension and is copied into the output, so it works without adding a file to your project.
+Any other value is a path relative to your document.
+
+`volume` applies to both sounds, and is worth setting well below `1.0`:
+
+```markdown
+{{{< elevator audio=music.mp3 volume=0.4 >}}}
+```
+
+By default the music loops until the ride finishes.
+Turn that off to play it once:
+
+```markdown
+{{{< elevator audio=music.mp3 loop-audio=false >}}}
+```
+
+## Calling it from the keyboard
+
+`shortcut` binds one key, matched against the browser's `KeyboardEvent.key`:
+
+```markdown
+{{{< elevator audio=music.mp3 shortcut="t" >}}}
+```
+
+The key is ignored while the focus sits in a form field or any editable element, so it will not fire while a reader is typing in the search box.
+
+## Turning it off
+
+Set the option in the document front matter, or in `_quarto.yml` for a whole project:
+
+```yaml
+extensions:
+  elevator:
+    enabled: false
+```
+
+Every `elevator` shortcode then renders nothing, which is a quicker way to silence a site than removing the shortcodes one by one.
+
+## Source
+
+The repository ships a short, standalone starting point you can copy: [`example.qmd`](https://github.com/mcanouil/quarto-elevator/blob/main/example.qmd).
