@@ -1,6 +1,6 @@
 # Elevator.js Extension for Quarto
 
-This extension provides support and shortcode to [Elevator.js](https://github.com/tholman/elevator.js).
+`elevator` is an extension for Quarto that provides a shortcode wrapping [Elevator.js](https://github.com/tholman/elevator.js): a back-to-top button that rides the page up slowly, with elevator music, and dings on arrival.
 
 Animation is only available for HTML-based documents.
 
@@ -14,79 +14,15 @@ This will install the extension under the `_extensions` subdirectory.
 
 If you're using version control, you will want to check in this directory.
 
-## Usage
+## Documentation
 
-To add an elevator button, use the `{{< elevator >}}` shortcode.
+The full documentation lives at <https://m.canouil.dev/quarto-elevator/>: every option, the audio and keyboard attributes, and a button you can ride.
 
-### Minimal
+[`example.qmd`](example.qmd) is a short, standalone starting point you can copy.
 
-```markdown
-{{< elevator >}}
-```
+## Licence
 
-### Custom text and scroll target
-
-The first positional argument is the button label and the second is the id of an element to scroll to instead of the top of the page.
-
-```markdown
-{{< elevator "Back to header" my-header >}}
-```
-
-### Audio
-
-`audio` is the looping music played during the scroll and `end` is the sound played once the scroll finishes.
-
-```markdown
-{{< elevator audio=music.mp3 end=ding.mp3 >}}
-```
-
-The built-in name `ding` resolves to the bundled `ding.mp3`, so `audio=ding` or `end=ding` works without copying the file into your project.
-
-### Volume
-
-`volume` accepts a number in the range [0.0, 1.0]. Out-of-range or non-numeric values are clamped and a warning is emitted at render time.
-
-```markdown
-{{< elevator audio=music.mp3 volume=0.5 >}}
-```
-
-### Loop control
-
-`loop-audio` defaults to `true` (Elevator.js's own default). Set it to `false` to play the main audio just once. The extension overrides Elevator.js's internal `setAttribute('loop', 'false')` no-op so this option actually disables looping.
-
-```markdown
-{{< elevator audio=music.mp3 loop-audio=false >}}
-```
-
-### Keyboard shortcut
-
-`shortcut` binds a single key (matched against `KeyboardEvent.key`) that triggers the elevator from anywhere on the page, except when the focus is inside an `<input>`, `<textarea>`, `<select>`, or any `contenteditable` element.
-
-```markdown
-{{< elevator audio=music.mp3 shortcut="t" >}}
-```
-
-### Global disable
-
-Set `extensions.elevator.enabled: false` in the document YAML to suppress every `{{< elevator >}}` shortcode in that document.
-
-```yaml
----
-extensions:
-  elevator:
-    enabled: false
----
-```
-
-## Example
-
-Here is the source code for a minimal example: [example.qmd](example.qmd).
-
-Output of `example.qmd`:
-
-- [HTML](https://m.canouil.dev/quarto-elevator/)
-
----
+[MIT](https://github.com/mcanouil/quarto-elevator?tab=MIT-1-ov-file#readme).
 
 [BossaBossa](BossaBossa.mp3) by Kevin MacLeod | <https://incompetech.com/>.
 Music promoted by <https://www.chosic.com/free-music/all/>.

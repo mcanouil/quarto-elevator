@@ -1,0 +1,84 @@
+---
+title: "Reference"
+subtitle: "Every option the elevator extension accepts."
+description: "The complete elevator configuration: shortcode arguments, audio and keyboard attributes, the global switch, and what happens to Quarto's own back-to-top button."
+---
+
+## Shortcode
+
+```markdown
+{{{< elevator >}}}
+{{{< elevator "<text>" <target> audio=... end=... volume=... loop-audio=... shortcut=... >}}}
+```
+
+| Argument | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `text` | string | No | `Return to the top!` | The button label. |
+| `target` | string | No | | The `id` of an element to ride to, instead of the top of the page. Written without the leading `#`. |
+
+: Positional arguments of the `elevator` shortcode. {.striped .hover tbl-colwidths="[13,10,10,22,45]"}
+
+The second argument is only read when the first is given, so a target needs an explicit label in front of it.
+
+### Attributes
+
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `audio` | path or name | | Music played for the length of the ride. |
+| `end` | path or name | `ding.mp3` | Sound played on arrival. |
+| `volume` | number | | Playback volume, from `0.0` to `1.0`. Applies to both sounds. |
+| `loop-audio` | boolean | `true` | Whether `audio` repeats until the ride finishes. |
+| `shortcut` | string | | A single key that calls the elevator from anywhere on the page. |
+
+: Attributes of the `elevator` shortcode. {.striped .hover tbl-colwidths="[15,15,13,57]"}
+
+`audio` and `end` take a path relative to your document, or the built-in name `ding`, which resolves to the sound bundled with the extension and is copied into the output for you.
+
+`loop-audio` accepts `true`, `yes`, `1`, and `on`, or `false`, `no`, `0`, and `off`.
+Anything else falls back to the default without a warning.
+
+`shortcut` is matched against the browser's [`KeyboardEvent.key`](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/key), so `t` is a letter and `Escape` is a name.
+It is ignored while the focus is inside an `input`, `textarea`, or `select`, or any element with `contenteditable`, so it will not fire mid-sentence in a search box.
+
+## Configuration
+
+```yaml
+extensions:
+  elevator:
+    enabled: false
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enabled` | boolean | `true` | When `false`, every `elevator` shortcode in the document renders nothing. |
+
+: Document and project options. {.striped .hover tbl-colwidths="[15,13,12,60]"}
+
+## Quarto's own back-to-top button
+
+Quarto draws its own back-to-top control when `back-to-top-navigation` is set.
+Where one is present, the extension takes it over as well: it removes the built-in click handler and wires the same elevator behaviour, audio included.
+
+One shortcode is still needed on the page to load the script, but the button it produces can be left wherever it suits you.
+
+## Validation
+
+| Rule | What is accepted | On failure |
+| --- | --- | --- |
+| `volume` | A number from `0.0` to `1.0`. | A non-numeric value warns and is ignored. A number outside the range warns and is clamped. |
+| `loop-audio` | The boolean spellings above. | Falls back to `true`, silently. |
+| `audio`, `end` | Any path, or the name `ding`. | A path that does not resolve in the browser fails at playback, not at render. |
+
+: Validation rules and what happens when a value fails them. {.striped .hover tbl-colwidths="[15,40,45]"}
+
+## Limitations
+
+::: {.callout-caution}
+One button per page.
+Each shortcode emits a button carrying the same `elevator-button` class, and each script block wires the first one it finds.
+Two shortcodes on a page therefore give the first button two elevators and the second button none.
+:::
+
+- HTML formats carrying JavaScript only. Everywhere else the shortcode renders nothing.
+- Browsers block audio that starts without a user gesture, so the music depends on the ride beginning with a click. A ride triggered by `shortcut` alone, before any click on the page, may arrive in silence.
+- Elevator.js keeps its audio in private variables, so `volume` and `loop-audio` are applied by wrapping the browser's `Audio` constructor for the moment the elevator is built, then restoring it. This is why `loop-audio=false` works at all: the library's own handling sets the `loop` attribute to the string `"false"`, which a browser reads as true.
