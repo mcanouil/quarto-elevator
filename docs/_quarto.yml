@@ -14,10 +14,11 @@ project:
   # Pages workflow runs it before every render. See
   # _extensions/README.md.
   pre-render: ./_scripts/pre-render.sh
-  # `add_format_resource` drops the bundled arrival sound into the project
-  # directory while the page renders, which is too late for Quarto's own
-  # resource scan. Naming it here copies it into the output, so the ding the
-  # examples page promises actually plays.
+  # The extension registers its bundled arrival sound with
+  # `add_format_resource`, which writes it into the project directory while a
+  # page renders, after Quarto has already resolved the project resources.
+  # _scripts/pre-render.sh copies it in beforehand so this entry finds it, and
+  # _scripts/post-render.sh removes it again.
   resources:
     - ding.mp3
   post-render: ./_scripts/post-render.sh
