@@ -3,14 +3,32 @@
 --- @copyright 2026 Mickaël Canouil
 --- @author Mickaël Canouil
 
+--- Extension name used as a prefix for log messages and as the name the schema
+--- check reports under.
+--- @type string
+local EXTENSION = 'elevator'
+
 --- Load modules
 local str = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/string.lua'):gsub('%.lua$', ''))
 local html_mod = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/html.lua'):gsub('%.lua$', ''))
 local log = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/logging.lua'):gsub('%.lua$', ''))
+local schema = require(quarto.utils.resolve_path('_vendor/quarto-wizard/schema.lua'):gsub('%.lua$', ''))
+local check = require(quarto.utils.resolve_path('_vendor/quarto-lua-modules/schema-check.lua'):gsub('%.lua$', ''))
 
---- Extension name used as a prefix for log messages.
---- @type string
-local EXTENSION = 'elevator'
+--- The schema check, built once and reused by every shortcode call. It reads
+--- `_schema.yml` on the way in, checks the document configuration once, and
+--- checks each call against the entry that describes it.
+---
+--- The validator is injected rather than required by the check module, so the
+--- two vendored sources stay independent of where the other was placed.
+---
+--- The extension contributes a shortcode and no filter, so the check runs from
+--- the shortcode handler. The call sits ahead of the format guard, so a
+--- document is checked even where the shortcode itself renders nothing.
+---
+--- A schema that cannot be read is reported by the module as an error and the
+--- render carries on: a configuration file must not stop a document.
+local checker = check.new(schema, EXTENSION)
 
 --- Default end-of-scroll audio file shipped with the extension.
 --- @type string
@@ -181,12 +199,15 @@ end
 ---
 --- @param args table Positional arguments (button text, optional target id)
 --- @param kwargs table Named arguments
---- @param meta table Document metadata (used for the global disable flag)
+--- @param meta table Document metadata (used for the global disable flag and the schema check)
 --- @return pandoc.RawInline|pandoc.Null HTML button or Null for non-HTML formats
 --- @usage {{< elevator >}}
 --- @usage {{< elevator "Back to top" >}}
 --- @usage {{< elevator "Go up" "header" audio="music.mp3" end="ding.mp3" volume=0.5 loop-audio=false shortcut="t" >}}
 local function elevator(args, kwargs, meta)
+  checker:options(meta)
+  checker:call('elevator', args, kwargs)
+
   if not quarto.doc.is_format('html:js') then
     return pandoc.Null()
   end
