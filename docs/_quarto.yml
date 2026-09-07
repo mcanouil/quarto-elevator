@@ -27,9 +27,15 @@ website:
   title: "Elevator"
   description: "A Quarto shortcode that turns scrolling back to the top into an elevator ride, complete with music."
   # No trailing slash: Quarto builds the social image URL by concatenating this
-  # with a leading-slash image path, without normalising.
+  # with the image path, without normalising.
   site-url: &site-url https://m.canouil.dev/quarto-elevator
   repo-url: https://github.com/mcanouil/quarto-elevator
+  open-graph:
+    image: assets/social/og-image.png
+    image-alt: "The quarto-elevator social card: the extension name and the \"shortcode\" badge over the line \"Add a delightful 'back to top' elevator button, with music\", beside a dark code window showing document.qmd."
+  twitter-card:
+    image: assets/social/og-image.png
+    image-alt: "The quarto-elevator social card: the extension name and the \"shortcode\" badge over the line \"Add a delightful 'back to top' elevator button, with music\", beside a dark code window showing document.qmd."
   # The Quarto project root is `docs/`, so without this every edit and issue
   # link points at a path one level up from the page it was built for.
   repo-subdir: docs
