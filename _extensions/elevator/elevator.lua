@@ -205,12 +205,13 @@ end
 --- @usage {{< elevator "Back to top" >}}
 --- @usage {{< elevator "Go up" "header" audio="music.mp3" end="ding.mp3" volume=0.5 loop-audio=false shortcut="t" >}}
 local function elevator(args, kwargs, meta)
-  checker:options(meta)
   checker:call('elevator', args, kwargs)
 
   if not quarto.doc.is_format('html:js') then
     return pandoc.Null()
   end
+
+  checker:options(meta)
 
   if is_globally_disabled(meta) then
     return pandoc.Null()
