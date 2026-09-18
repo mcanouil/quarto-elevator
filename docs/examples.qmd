@@ -156,7 +156,7 @@ This site copies it in before the render and lists it under `resources`, which i
 
 A file the browser cannot fetch produces no warning at render time.
 The sound whose file is missing does not play, and the others still do.
-A missing `audio` leaves the ride silent and still sounds the arrival, because `end` falls back to the bundled sound.
+A missing `audio` leaves the ride silent and still sounds the arrival, because the arrival sound is fetched on its own, whether it is the bundled one or a file `end` names.
 
 ## Calling it from the keyboard
 
