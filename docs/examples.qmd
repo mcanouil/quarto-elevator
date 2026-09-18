@@ -155,7 +155,8 @@ The shortcode registers it while the page renders, which is after Quarto has res
 This site copies it in before the render and lists it under `resources`, which is why the button at the top of this page dings.
 
 A file the browser cannot fetch produces no warning at render time.
-The ride simply arrives in silence.
+The sound whose file is missing does not play, and the others still do.
+A missing `audio` leaves the ride silent and still sounds the arrival, because `end` falls back to the bundled sound.
 
 ## Calling it from the keyboard
 
