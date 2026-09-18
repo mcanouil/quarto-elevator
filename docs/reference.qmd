@@ -38,7 +38,7 @@ A project has to copy the sound into its output itself.
 List it under `resources` in `_quarto.yml`, as this site does, or the page asks for a file the output does not carry.
 
 The extension reads `true`, `yes`, `1`, and `on` as true, and `false`, `no`, `0`, and `off` as false.
-The schema accepts only `true` and `false`, so every other spelling is reported even though the extension honours it.
+The schema accepts the words `true` and `false` in any case, so `TRUE` passes unreported, and the six other spellings are reported even though the extension honours them.
 Write `true` or `false` to keep the render quiet.
 
 `shortcut` is matched against the browser's [`KeyboardEvent.key`](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/key), so `t` is a letter and `Escape` is a name.
