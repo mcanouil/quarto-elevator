@@ -32,10 +32,14 @@ The second argument is only read when the first is given, so a target needs an e
 
 : Attributes of the `elevator` shortcode. {.striped .hover tbl-colwidths="[15,15,13,57]"}
 
-`audio` and `end` take a path relative to your document, or the built-in name `ding`, which resolves to the sound bundled with the extension and is copied into the output for you.
+`audio` and `end` take a path relative to your document, or the built-in name `ding`, which resolves to the sound bundled with the extension.
 
-`loop-audio` accepts `true`, `yes`, `1`, and `on`, or `false`, `no`, `0`, and `off`.
-Anything else falls back to the default without a warning.
+A project has to copy the sound into its output itself.
+List it under `resources` in `_quarto.yml`, as this site does, or the page asks for a file the output does not carry.
+
+The extension reads `true`, `yes`, `1`, and `on` as true, and `false`, `no`, `0`, and `off` as false.
+The schema accepts the words `true` and `false` in any case, so `TRUE` passes unreported, and the six other spellings are reported even though the extension honours them.
+Write `true` or `false` to keep the render quiet.
 
 `shortcut` is matched against the browser's [`KeyboardEvent.key`](https://developer.mozilla.org/docs/Web/API/KeyboardEvent/key), so `t` is a letter and `Escape` is a name.
 It is ignored while the focus is inside an `input`, `textarea`, or `select`, or any element with `contenteditable`, so it will not fire mid-sentence in a search box.
