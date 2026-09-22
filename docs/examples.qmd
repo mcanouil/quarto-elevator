@@ -32,16 +32,74 @@ The first argument is the label, the second the `id` of the element to stop at.
 
 A target is written without its leading `#`, and needs a label in front of it, since the second argument is only read when the first is present.
 
-## Adding music
+## What the label may contain
 
-`audio` plays for the length of the ride, and `end` replaces the arrival sound.
+The label reaches the button as plain text.
+A quoted argument is passed through as it was typed, so markdown inside it is not read and HTML inside it is escaped.
 
 ```markdown
-{{{< elevator "Going up" audio=music.mp3 end=ding >}}}
+{{{< elevator "**Go** up" >}}}
 ```
 
-The name `ding` is built in: it resolves to the sound shipped with the extension and is copied into the output, so it works without adding a file to your project.
-Any other value is a path relative to your document.
+That call renders:
+
+```html
+<button class="btn btn-outline-primary elevator-button" type="submit">**Go** up</button>
+```
+
+The asterisks are part of the label.
+
+```markdown
+{{{< elevator "<b>Go</b> up & down" >}}}
+```
+
+That one renders:
+
+```html
+<button class="btn btn-outline-primary elevator-button" type="submit">&lt;b&gt;Go&lt;/b&gt; up &amp; down</button>
+```
+
+The tags are shown rather than applied, and the ampersand is escaped.
+Neither call is rendered live here, because a page carries one working button and this page already has one.
+
+The label is also the accessible name of the button, which is the text a screen reader announces.
+Write a label that says where the button goes, and leave the formatting out of it.
+
+## Pointing at a heading
+
+A target is an `id` that already exists on the page.
+Give the heading an `id`, then name that `id` without its `#`:
+
+```markdown
+## The controls {#the-controls}
+
+Some text.
+
+{{{< elevator "Back to the controls" the-controls >}}}
+```
+
+Write the target after a label, never on its own.
+A single argument is always read as the label, so the call below produces a button reading `the-controls`, which still rides to the top of the page:
+
+```markdown
+{{{< elevator the-controls >}}}
+```
+
+An `id` that no element carries is not an error.
+The ride falls back to the top of the page.
+
+## Adding music
+
+`audio` plays for the length of the ride, and `end` names the sound played on arrival.
+
+```markdown
+{{{< elevator "Going up" audio=music.mp3 end=arrived.mp3 >}}}
+```
+
+Each one takes a path relative to your document.
+The name `ding` is built in, and both attributes accept it.
+It resolves to the sound shipped with the extension, which is also the sound `end` plays when you leave it out.
+See [Getting the sounds into the output](#getting-the-sounds-into-the-output) for where the files have to be.
 
 `volume` applies to both sounds, and is worth setting well below `1.0`:
 
@@ -56,6 +114,63 @@ Turn that off to play it once:
 {{{< elevator audio=music.mp3 loop-audio=false >}}}
 ```
 
+## Volume without music
+
+`volume` reaches every sound the elevator builds, and the arrival sound is one of them.
+It is worth setting even where there is no ride music:
+
+```markdown
+{{{< elevator volume=0.2 >}}}
+```
+
+That button plays the bundled arrival sound at a fifth of its volume.
+
+## What `loop-audio` needs
+
+`loop-audio` acts on the ride music alone.
+Elevator.js sets the loop on the main audio, and only where `audio` is given.
+Written on its own, the option reaches the page and has nothing to act on:
+
+```markdown
+{{{< elevator loop-audio=false >}}}
+```
+
+That button sounds exactly like the default one.
+Pair the option with `audio` for it to mean anything:
+
+```markdown
+{{{< elevator audio=music.mp3 loop-audio=false >}}}
+```
+
+The arrival sound never loops, whatever `loop-audio` says.
+Write the value as `true` or `false`.
+
+## Getting the sounds into the output
+
+A sound plays only where the browser can fetch it.
+
+Render one document on its own, and Quarto writes the page beside the source.
+A sound file beside that source is then already in place.
+
+A project that writes to an output directory needs more.
+The audio path appears only inside the script the shortcode writes, and Quarto does not read that script, so nothing copies the file for you.
+List the file as a project resource:
+
+```yaml
+project:
+  type: website
+  resources:
+    - music.mp3
+```
+
+The bundled arrival sound needs the same care.
+The shortcode registers it while the page renders, which is after Quarto has resolved the project resources, so it lands in the project directory rather than in the output directory.
+This site copies it in before the render and lists it under `resources`, which is why the button at the top of this page dings.
+
+A file the browser cannot fetch produces no warning at render time.
+The sound whose file is missing does not play, and the others still do.
+A missing `audio` leaves the ride silent and still sounds the arrival, because the arrival sound is fetched on its own, whether it is the bundled one or a file `end` names.
+
 ## Calling it from the keyboard
 
 `shortcut` binds one key, matched against the browser's `KeyboardEvent.key`:
@@ -65,6 +180,44 @@ Turn that off to play it once:
 ```
 
 The key is ignored while the focus sits in a form field or any editable element, so it will not fire while a reader is typing in the search box.
+
+## Quarto's own back-to-top button
+
+Quarto draws its own back-to-top control where `back-to-top-navigation` is on.
+This site has one.
+Scroll down this page, then start scrolling back up, and a small pill appears at the foot of the window.
+
+On this page that pill is an elevator.
+The one shortcode above wired it, alongside its own button, with the same options.
+The pill on the other pages of this site is Quarto's plain jump, because those pages carry no shortcode.
+
+The shortcode always writes a button of its own, so put that button wherever it suits you.
+The pill is taken over either way, as the [Reference](reference.qmd#quartos-own-back-to-top-button) explains.
+
+## Keyboard and screen readers
+
+The shortcode writes a real `button` element.
+It takes focus in the tab order, and Enter or Space presses it, so the ride on this page works from the keyboard.
+Its accessible name comes from the label, and the extension adds no `aria-label` that could override it.
+
+Quarto's back-to-top pill is not the same.
+Quarto writes it as a link with no address and with `role="button"`, so it announces itself as a button and never takes focus.
+The extension replaces what a click on the pill does, and adds nothing that puts the pill in the tab order.
+Keep the button from the shortcode on the page for readers who do not use a mouse.
+
+Nothing moves the focus after the ride.
+The page scrolls, and the next `Tab` carries on from the button, not from the top of the page and not from the target.
+
+The ride is always animated.
+Neither the extension nor Elevator.js reads `prefers-reduced-motion`.
+
+`shortcut` binds one key across the whole page, and the handler cancels the usual action of that key everywhere outside form fields and editable elements.
+Choose a key that the browser and the reader's assistive software do not already use.
+
+::: {.callout-caution}
+Where Quarto's back-to-top pill is on the page, `shortcut` is bound once for each control.
+One press then starts two rides at once and plays the sounds twice.
+:::
 
 ## Turning it off
 
