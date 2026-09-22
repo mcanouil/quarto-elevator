@@ -10,7 +10,7 @@
 ### Documentation
 
 - docs: Serve the extension's social card as the Open Graph image, so a shared link shows the card rather than the first image on the page. (#44)
-- docs: Add worked examples for the button label, the target, the audio options, the files a project must copy, Quarto's own back-to-top button, and keyboard use.
+- docs: Add worked examples for the label, the target, the audio, the files a project must copy, and keyboard use. Record the resource timing and the double-bound shortcut in the reference. (#49)
 
 ### Refactoring
 

@@ -35,7 +35,10 @@ The second argument is only read when the first is given, so a target needs an e
 `audio` and `end` take a path relative to your document, or the built-in name `ding`, which resolves to the sound bundled with the extension.
 
 A project has to copy the sound into its output itself.
-List it under `resources` in `_quarto.yml`, as this site does, or the page asks for a file the output does not carry.
+List it under `resources` in `_quarto.yml`, and put it in place before the render, or the page asks for a file the output does not carry.
+The bundled sound is registered while a page renders, which is after Quarto has resolved the project resources, so a `resources` entry alone finds nothing on a clean project.
+This site copies it in from a pre-render script.
+See [Getting the sounds into the output](examples.qmd#getting-the-sounds-into-the-output).
 
 The extension reads `true`, `yes`, `1`, and `on` as true, and `false`, `no`, `0`, and `off` as false.
 The schema accepts the words `true` and `false` in any case, so `TRUE` passes unreported, and the six other spellings are reported even though the extension honours them.
@@ -70,7 +73,7 @@ One shortcode is still needed on the page to load the script, but the button it 
 | Rule | What is accepted | On failure |
 | --- | --- | --- |
 | `volume` | A number from `0.0` to `1.0`. | A non-numeric value warns and is ignored. A number outside the range warns and is clamped. |
-| `loop-audio` | The boolean spellings above. | Falls back to `true`, silently. |
+| `loop-audio` | The boolean spellings above. | A spelling the schema does not accept is reported by the schema check, and the extension falls back to `true`. |
 | `audio`, `end` | Any path, or the name `ding`. | A path that does not resolve in the browser fails at playback, not at render. |
 
 : Validation rules and what happens when a value fails them. {.striped .hover tbl-colwidths="[15,40,45]"}
@@ -85,4 +88,5 @@ Two shortcodes on a page therefore give the first button two elevators and the s
 
 - HTML formats carrying JavaScript only. Everywhere else the shortcode renders nothing.
 - Browsers block audio that starts without a user gesture, so the music depends on the ride beginning with a click. A ride triggered by `shortcut` alone, before any click on the page, may arrive in silence.
+- `shortcut` is bound once for each control on the page. Where Quarto's own back-to-top pill is present, the key is bound twice, so one press starts two rides and plays the sounds twice.
 - Elevator.js keeps its audio in private variables, so `volume` and `loop-audio` are applied by wrapping the browser's `Audio` constructor for the moment the elevator is built, then restoring it. This is why `loop-audio=false` works at all: the library's own handling sets the `loop` attribute to the string `"false"`, which a browser reads as true.
