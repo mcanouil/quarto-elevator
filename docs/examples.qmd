@@ -79,7 +79,7 @@ Some text.
 ```
 
 Write the target after a label, never on its own.
-A single argument is always read as the label, so the button below reads `the-controls` and still rides to the top of the page:
+A single argument is always read as the label, so the call below produces a button reading `the-controls`, which still rides to the top of the page:
 
 ```markdown
 {{{< elevator the-controls >}}}
