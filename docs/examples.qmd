@@ -35,19 +35,32 @@ A target is written without its leading `#`, and needs a label in front of it, s
 ## What the label may contain
 
 The label reaches the button as plain text.
-Markdown inside it is not read, and HTML inside it is escaped.
+A quoted argument is passed through as it was typed, so markdown inside it is not read and HTML inside it is escaped.
 
 ```markdown
 {{{< elevator "**Go** up" >}}}
 ```
 
-That button reads `**Go** up`, asterisks included.
+That call renders:
+
+```html
+<button class="btn btn-outline-primary elevator-button" type="submit">**Go** up</button>
+```
+
+The asterisks are part of the label.
 
 ```markdown
 {{{< elevator "<b>Go</b> up & down" >}}}
 ```
 
-That one reads `<b>Go</b> up & down`, tags included.
+That one renders:
+
+```html
+<button class="btn btn-outline-primary elevator-button" type="submit">&lt;b&gt;Go&lt;/b&gt; up &amp; down</button>
+```
+
+The tags are shown rather than applied, and the ampersand is escaped.
+Neither call is rendered live here, because a page carries one working button and this page already has one.
 
 The label is also the accessible name of the button, which is the text a screen reader announces.
 Write a label that says where the button goes, and leave the formatting out of it.
