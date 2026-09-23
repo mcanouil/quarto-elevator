@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.6.1 (2026-09-23)
+
 ### Bug Fixes
 
 - fix: Gate the options check on the html:js format so non-acting formats stay silent. (#48)
