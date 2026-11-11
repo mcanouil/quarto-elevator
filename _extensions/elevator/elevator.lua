@@ -219,7 +219,6 @@ local function elevator(args, kwargs, meta)
 
   html_mod.ensure_html_dependency({
     name = 'elevatorjs',
-    version = '1.0.0',
     scripts = { 'elevator.min.js' }
   })
 
